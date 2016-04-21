@@ -2,13 +2,19 @@ require 'csv' #Requiring external Libraries Similar to import statement in Java
 
 #modules are a way to support Multiple Inheritance in ruby similar to Interfaces in Java
 module Planner
+
+  #Retrieving Issues based on the priority
   def getHighestRankedIssue list
-    list.sort_by!{ |item| item.priority.to_i}
+    list.sort_by!{ |item| -item.priority.to_i}
     puts list.first
   end
+
+  #retrieving Pre-Requisites for the given Issue
   def get_todo_list
       "Here are the things you have to do before hand #{self.prerequisities.join(" ")}"
   end
+
+  #Filtering Issues based on Percentage Completed
   def filter_list list
     list.reject! { |i| i.percentComplete.to_i < 90 }
   end
@@ -17,7 +23,7 @@ class Issue
   include Comparable,Planner
 attr_accessor :name,:priority,:estimatedManHours,:percentComplete,:prerequisities #Getters and Setters
   def initialize issue
-    @name,@priority,@estimatedManhours,@percentComplete,*@prerequisities=issue
+    @name,@priority,@estimatedManhours,@percentComplete,*@prerequisities=issue #parallel assignment
     @percentComplete=@percentComplete.to_f
   end
   def to_s
@@ -44,5 +50,5 @@ File.open("ruby.txt", "r+") do |f|
   end
 end
 p Issue_Array
-p "The TODO list for the given task is #{Issue_Array[1].get_todo_list}"
+puts "The TODO list for the given task is #{Issue_Array[1].get_todo_list}"
 puts "Filtering List Based on Percent Complete #{Issue.filter_list Issue_Array}"
